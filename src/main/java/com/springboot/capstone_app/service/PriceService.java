@@ -1,13 +1,12 @@
 package com.springboot.capstone_app.service;
 
 import org.springframework.stereotype.Service;
-import com.springboot.capstone_app.enums.CarType;
 
 @Service
 public class PriceService {
 
     // Calculate price based on CarType and number of days
-    public int calculatePrice(CarType carType, int days) {
+    public int calculatePrice(String carType, int days) {
         if (carType == null || days <= 0) {
             throw new IllegalArgumentException("Invalid car type or days");
         }
@@ -15,19 +14,19 @@ public class PriceService {
         // Hardcoded realistic prices per day for each car type
         int pricePerDay;
         switch (carType) {
-            case SUV:
+            case "SUV":
                 pricePerDay = 3000;
                 break;
-            case SEDAN:
+            case "SEDAN":
                 pricePerDay = 2500;
                 break;
-            case SPORTS:
+            case "SPORTS":
                 pricePerDay = 8000;
                 break;
-            case HATCHBACK:
+            case "HATCHBACK":
                 pricePerDay = 1500;
                 break;
-            case CONVERTIBLE:
+            case "CONVERTIBLE":
                 pricePerDay = 6000;
                 break;
             default:

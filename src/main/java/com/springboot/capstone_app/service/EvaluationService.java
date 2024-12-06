@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springboot.capstone_app.enums.CarStatus;
 import com.springboot.capstone_app.enums.EvalStatus;
 import com.springboot.capstone_app.enums.EvalVerdict;
 import com.springboot.capstone_app.model.Car;
@@ -30,6 +31,7 @@ public class EvaluationService {
         String fuelType = car.getFuel_type(), bodyType = car.getBody_type(), condition = car.getCar_condition();
         int calculatedPrice = calculateCarValuation(model,year,fuelType,bodyType,condition,2024);
         car.setPrice(calculatedPrice);
+        
         carRepository.save(car);
         
         Evaluation evaluation = new Evaluation();
@@ -52,7 +54,17 @@ public class EvaluationService {
         }
         if (evalVerdict != null) {
             evaluation.setEvalVerdict(evalVerdict);
+
+           
+            if (evalVerdict == EvalVerdict.PASS) {
+                Car car = evaluation.getCar(); 
+                if (car != null) {
+                    car.setCarStatus(CarStatus.INVENTORY);
+                    carRepository.save(car); 
+                }
+            }
         }
+         
         evaluation.setValuation(valuation);
         return evaluationRepository.save(evaluation);
     }
@@ -166,5 +178,35 @@ public class EvaluationService {
             default:
                 return 1.0; // Default multiplier for unknown body types
         }
+        
+        
+    }
+    public Evaluation updateEvalStatusAndVerdict(int evaluationId, EvalStatus evalStatus, EvalVerdict evalVerdict) {
+    	 // Find the Evaluation by ID
+        Evaluation evaluation = evaluationRepository.findById(evaluationId)
+                .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
+
+        // Retrieve the associated Car object from the Evaluation
+        Car car = evaluation.getCar(); // Assuming there's a getCar() method in Evaluation
+
+        // Update evalStatus if it's not null
+        if (evalStatus != null) {
+            evaluation.setEvalstatus(evalStatus);
+        }
+
+        // Update evalVerdict if it's not null
+        if (evalVerdict != null) {
+            evaluation.setEvalVerdict(evalVerdict);
+
+            // If evalVerdict is PASS, update the car status to INVENTORY
+            if (evalVerdict == EvalVerdict.PASS && car != null) {
+                car.setCarStatus(CarStatus.INVENTORY); // Set car status to INVENTORY
+                // Save the updated car object
+                carRepository.save(car);
+            }
+        }
+
+        // Save the updated evaluation object
+        return evaluationRepository.save(evaluation);
     }
 }

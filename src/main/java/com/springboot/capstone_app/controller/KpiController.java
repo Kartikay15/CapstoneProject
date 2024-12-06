@@ -60,4 +60,10 @@ public class KpiController {
         Kpi updatedKpi = kpiService.modifyKpiByName(name, newValue);
         return new ResponseEntity<>(updatedKpi, HttpStatus.OK);
     }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refreshKpis() {
+        kpiService.refreshKpis();
+        return new ResponseEntity<>("KPIs updated successfully", HttpStatus.OK);
+    }
 }

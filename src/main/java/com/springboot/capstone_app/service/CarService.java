@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springboot.capstone_app.enums.CarStatus;
 import com.springboot.capstone_app.enums.Platform;
 import com.springboot.capstone_app.model.Car;
 import com.springboot.capstone_app.repository.CarRepository;
@@ -57,5 +58,10 @@ public class CarService {
             return carRepository.save(car);
         }
         return null; // Return null if car not found
+    }
+    public Car updateCarStatus(int id, CarStatus newStatus) {
+        Car car = carRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Car not found with ID: " + id));
+        car.setCarStatus(newStatus);
+        return carRepository.save(car);
     }
 }

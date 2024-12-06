@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.springboot.capstone_app.enums.CarStatus;
 import com.springboot.capstone_app.model.Car;
 import com.springboot.capstone_app.service.CarService;
 
@@ -75,5 +76,11 @@ public class CarController {
         } else {
             return new ResponseEntity<>("Car not found", HttpStatus.NOT_FOUND);
         }
+    }
+    
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> updateCarStatus(@PathVariable int id, @RequestParam CarStatus newStatus) {
+        Car updatedCar = carService.updateCarStatus(id, newStatus);
+        return ResponseEntity.ok(updatedCar);
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.springboot.capstone_app.enums.CarType;
+
 import com.springboot.capstone_app.service.PriceService;
 
 @RestController
@@ -19,7 +19,7 @@ public class PriceController {
     // Calculate price based on car type and days
     @GetMapping("/calculate")
     public ResponseEntity<Integer> calculatePrice(
-            @RequestParam CarType carType,
+            @RequestParam String carType,
             @RequestParam int days) {
         int price = priceService.calculatePrice(carType, days);
         return ResponseEntity.ok(price);

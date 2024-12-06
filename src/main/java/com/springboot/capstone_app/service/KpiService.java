@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.springboot.capstone_app.model.Kpi;
+
 import com.springboot.capstone_app.repository.KpiRepository;
 
 @Service
@@ -14,6 +16,7 @@ public class KpiService {
 
     @Autowired
     private KpiRepository kpiRepository;
+
 
     // Create KPI
     public Kpi createKpi(Kpi kpi) {
@@ -48,5 +51,31 @@ public class KpiService {
                 .orElseThrow(() -> new IllegalArgumentException("KPI with name " + name + " not found"));
         kpi.setValue(newValue);
         return kpiRepository.save(kpi);
+    }
+    
+    public void refreshKpis() {
+        int revResell = kpiRepository.getRevResell();
+        int revRental = kpiRepository.getRevRental();
+        int cancelBookings = kpiRepository.getCancelBookings();
+        int hiredBookings = kpiRepository.getHiredBookings();
+        int totalRentals = kpiRepository.getTotalRentals();
+        int carRentedOut = hiredBookings;
+        int carsSold = kpiRepository.getCarsSold();
+        int users = kpiRepository.getUsers();
+        int rentalInventory = totalRentals-carRentedOut;
+        int resellInventory = kpiRepository.getResellInventory();
+        int listedCars = kpiRepository.getListedCars();
+
+        modifyKpiByName("revResell", revResell);
+        modifyKpiByName("revRental", revRental);
+        modifyKpiByName("cancelBookings", cancelBookings);
+        modifyKpiByName("hiredBookings", hiredBookings);
+        modifyKpiByName("totalRentals",totalRentals);
+        modifyKpiByName("carRentedOut",carRentedOut);
+        modifyKpiByName("carsSold",carsSold);
+        modifyKpiByName("users",users);
+        modifyKpiByName("rentalInventory",rentalInventory);
+        modifyKpiByName("resellInventory", resellInventory);
+        modifyKpiByName("listedCars",listedCars);
     }
 }

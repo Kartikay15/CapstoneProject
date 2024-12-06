@@ -63,5 +63,16 @@ public class EvaluationController {
         Evaluation updatedEvaluation = evaluationService.updateEvalVerdict(evaluationId, evalVerdict);
         return new ResponseEntity<>(updatedEvaluation, HttpStatus.OK);
     }
+    
+    @PatchMapping("/updateStatusVerdict/{evaluationId}")
+    public ResponseEntity<Evaluation> updateStatusAndVerdict(
+            @PathVariable int evaluationId,
+            @RequestParam EvalStatus evalStatus,
+            @RequestParam EvalVerdict evalVerdict) {
+        
+        // Call the new service method to update both evalStatus and evalVerdict
+        Evaluation updatedEvaluation = evaluationService.updateEvalStatusAndVerdict(evaluationId, evalStatus, evalVerdict);
+        return new ResponseEntity<>(updatedEvaluation, HttpStatus.OK);
+    }
 
 }
