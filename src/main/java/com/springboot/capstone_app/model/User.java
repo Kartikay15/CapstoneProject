@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.springboot.capstone_app.enums.Converted;
 import com.springboot.capstone_app.enums.Role;
 
 import jakarta.persistence.*;

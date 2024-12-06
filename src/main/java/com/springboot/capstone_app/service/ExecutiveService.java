@@ -5,7 +5,7 @@ import com.springboot.capstone_app.model.User;
 import com.springboot.capstone_app.repository.UserRepository;
 import com.springboot.capstone_app.exceptions.ResourceNotFoundException;
 import com.springboot.capstone_app.model.Executive;
-import com.springboot.capstone_app.model.Expert;
+
 import com.springboot.capstone_app.repository.ExecutiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

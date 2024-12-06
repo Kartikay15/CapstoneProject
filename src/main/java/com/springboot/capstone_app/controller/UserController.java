@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.capstone_app.enums.Converted;
 import com.springboot.capstone_app.enums.Role;
 import com.springboot.capstone_app.model.User;
 import com.springboot.capstone_app.repository.UserRepository;

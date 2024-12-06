@@ -1,5 +1,5 @@
 package com.springboot.capstone_app.enums;
 
-public class ComplainStatus {
-
+public enum ComplainStatus {
+	UNADRESSED, RESOLVED
 }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.springboot.capstone_app.enums.Converted;
 import com.springboot.capstone_app.enums.Role;
 import com.springboot.capstone_app.exceptions.InvalidUsernameException;
 import com.springboot.capstone_app.model.User;
