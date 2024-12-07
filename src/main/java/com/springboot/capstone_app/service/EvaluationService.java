@@ -27,9 +27,9 @@ public class EvaluationService {
         Car car = carRepository.findById(carId).orElseThrow(() -> new IllegalArgumentException("Car not found"));
         
         String model = car.getCar_model();
-        int year = Integer.parseInt(car.getPurchase_year());
-        String fuelType = car.getFuel_type(), bodyType = car.getBody_type(), condition = car.getCar_condition();
-        int calculatedPrice = calculateCarValuation(model,year,fuelType,bodyType,condition,2024);
+        int year = Integer.parseInt(car.getPurchase_year()), mileage = car.getMilage();
+        String brand = car.getBrand(),fuelType = car.getFuel_type(), bodyType = car.getBody_type(), condition = car.getCar_condition();
+        int calculatedPrice = calculateCarValuation(brand,model,year,fuelType,bodyType,condition,mileage,2024);
         car.setPrice(calculatedPrice);
         
         carRepository.save(car);
@@ -92,35 +92,93 @@ public class EvaluationService {
 
     
     // Method to calculate the car valuation
-    public int calculateCarValuation(String model, int year, String fuelType, String bodyType, String condition, int currentYear) {
-        // Base prices for different car models
+    public int calculateCarValuation(
+            String brand, String model, int year, String fuelType, String bodyType, 
+            String condition, int mileage, int currentYear) {
+
+        
         double basePrice = getBasePrice(model);
-        
-        // Fuel type multipliers
+        double brandMultiplier = getBrandMultiplier(brand);
         double fuelMultiplier = getFuelMultiplier(fuelType);
-        
-        // Condition multipliers
         double conditionMultiplier = getConditionMultiplier(condition);
-        
-        // Body type multipliers
         double bodyMultiplier = getBodyMultiplier(bodyType);
-        
-        // Calculate the age of the car
+        double mileageMultiplier = getMileageMultiplier(mileage);
         int age = currentYear - year;
-        
-        // Calculate depreciation factor (Assuming 5% depreciation per year)
         double depreciationFactor = 1 - (0.05 * age);
         if (depreciationFactor < 0.1) {
             depreciationFactor = 0.1; // Ensure a minimum of 10% value
         }
-        
-        // Final valuation
-        double valuation = basePrice * depreciationFactor * fuelMultiplier * conditionMultiplier * bodyMultiplier;
-        
-        return (int)valuation;
+
+        // Intermediate valuation before additional charges
+        double valuation = basePrice * depreciationFactor * brandMultiplier 
+                * fuelMultiplier * conditionMultiplier * bodyMultiplier * mileageMultiplier;
+
+        // Add additional charges
+        double gstRate = 0.18; // 18% GST
+        double platformFeeRate = 0.02; // 2% platform fee
+        double insuranceFee = 5000; // Flat fee for insurance
+        double rtoFee = calculateRtoFee(basePrice); // Dynamic RTO fee
+
+        valuation = valuation + (valuation * gstRate) + (valuation * platformFeeRate) + insuranceFee + rtoFee;
+
+        return (int) valuation;
     }
+
+    // Brand multiplier (Higher value for premium or popular brands)
+    private static double getBrandMultiplier(String brand) {
+        switch (brand.toLowerCase()) {
+            case "toyota":
+                return 1.1;
+            case "honda":
+                return 1.0;
+            case "hyundai":
+                return 0.9;
+            case "maruti":
+                return 0.8;
+            case "tata":
+                return 0.85;
+            case "ford":
+                return 0.9;
+            case "bmw":
+                return 1.3;
+            case "mercedes":
+                return 1.4;
+            case "audi":
+                return 1.35;
+            case "volkswagen":
+                return 1.2;
+            default:
+                return 1.0; // Default multiplier for unknown brands
+        }
+    }
+
+    // RTO fee calculation based on base price
+    private static double calculateRtoFee(double basePrice) {
+        if (basePrice < 500000) {
+            return 15000; // Low-cost cars
+        } else if (basePrice < 1000000) {
+            return 30000; // Mid-range cars
+        } else {
+            return 50000; // High-cost cars
+        }
+    }
+
     
-    // Get base price based on car model
+    private static double getMileageMultiplier(int mileage) {
+        if (mileage < 5000) {
+            return 1.1; // Bonus for very low mileage
+        } else if (mileage < 20000) {
+            return 1.0; // Standard mileage
+        } else if (mileage < 50000) {
+            return 0.9; // Slightly reduced for moderate mileage
+        } else if (mileage < 100000) {
+            return 0.8; // Reduced for high mileage
+        } else {
+            return 0.6; // Major reduction for very high mileage
+        }
+    }
+
+    // Base price (same as before)
     private static double getBasePrice(String model) {
         switch (model) {
             case "SUV":
@@ -133,8 +191,8 @@ public class EvaluationService {
                 return 500000; // Default base price if model not found
         }
     }
-    
-    // Get fuel type multiplier
+
+    // Fuel type multiplier (same as before)
     private static double getFuelMultiplier(String fuelType) {
         switch (fuelType) {
             case "Petrol":
@@ -149,8 +207,8 @@ public class EvaluationService {
                 return 1.0; // Default multiplier for unknown fuel types
         }
     }
-    
-    // Get condition multiplier
+
+    // Condition multiplier (same as before)
     private static double getConditionMultiplier(String condition) {
         switch (condition) {
             case "Excellent":
@@ -165,8 +223,8 @@ public class EvaluationService {
                 return 1.0; // Default multiplier for unknown conditions
         }
     }
-    
-    // Get body type multiplier
+
+   
     private static double getBodyMultiplier(String bodyType) {
         switch (bodyType) {
             case "Metal":
@@ -178,9 +236,8 @@ public class EvaluationService {
             default:
                 return 1.0; // Default multiplier for unknown body types
         }
-        
-        
     }
+
     public Evaluation updateEvalStatusAndVerdict(int evaluationId, EvalStatus evalStatus, EvalVerdict evalVerdict) {
     	 // Find the Evaluation by ID
         Evaluation evaluation = evaluationRepository.findById(evaluationId)

@@ -22,8 +22,9 @@ public class Car {
 	private String fuel_type;
 	private String body_type;
 	private String car_condition;
+	private int milage;
 	private int price;
-
+	private String brand;
 	
 	@Enumerated(EnumType.STRING)
 	private CarStatus carStatus;
@@ -79,12 +80,28 @@ public class Car {
 		this.car_condition = car_condition;
 	}
 
+	public int getMilage() {
+		return milage;
+	}
+
+	public void setMilage(int milage) {
+		this.milage = milage;
+	}
+
 	public int getPrice() {
 		return price;
 	}
 
 	public void setPrice(int price) {
 		this.price = price;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 
 	public CarStatus getCarStatus() {
@@ -103,6 +120,28 @@ public class Car {
 		this.platform = platform;
 	}
 
+/*
+ * @Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+	
+	private String car_model;
+	private String purchase_year;
+	private String fuel_type;
+	private String body_type;
+	private String car_condition;
+	private double price;
+	
+	@Enumerated(EnumType.STRING)
+	private CarStatus carStatus;
+	
+	private String  verified;*/
+	
+	
+	
+
+
+	
 	
 	
 } 

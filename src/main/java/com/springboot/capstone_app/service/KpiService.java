@@ -32,6 +32,7 @@ public class KpiService {
     }
     
     public List<Kpi> getAllKpis() {
+    	refreshKpis();
         return kpiRepository.findAll();
     }
 
